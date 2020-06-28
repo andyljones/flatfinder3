@@ -48,6 +48,8 @@ FLASK_ENV=development FLASK_APP=flatfinder3/server.py flask run --port 5001
 ```
 to start a [Flask development server](https://flask.palletsprojects.com/en/1.1.x/quickstart/#debug-mode) on 5001. Again, use the Remote Explorer pane of vscode to forward the port, then go to `localhost:5001` to see the UI. 
 
-Like with the code above, loading the listings can be slow but there's a lot of caching that'll go on after that. 
+Like with the code above, loading the listings is always slow but for everything else there's a lot of caching that'll speed things up after the first time. 
+
+By default it'll only show listings within 10 mins of a park and 10 mins of a town center.
 
 If you want to only show flats within a certain travel time of a point - or points - have a look at the `geo.aggtim` calls, which hook into TfL's travel time data. It's disabled by default because it depends on a list of locations that are specific to me (like, where my friends live, which I obviously don't want to put on GitHub), but looking at the `geo.LOCATIONS` conditionals will point you in the right direction about how to adapt it.

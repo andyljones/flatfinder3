@@ -69,8 +69,11 @@ def distances(base, shp):
 
 @aljpy.autocache('')
 def green_spaces(base, width=250):
-    """Downloaded from: https://geospatialwandering.wordpress.com/2015/05/22/open-spaces-shapefile-for-london """
-    with ZipFile("./data/Green spaces London.zip") as zf, \
+    """From: https://geospatialwandering.wordpress.com/2015/05/22/open-spaces-shapefile-for-london """
+
+    url = 'http://download1648.mediafire.com/uagkonyt1k3g/uvvwp9hjiatqyss/Green+spaces+London.zip'
+    r = requests.get(url)
+    with ZipFile(BytesIO(r.content)) as zf, \
             tempfile.TemporaryDirectory() as tmp:
         zf.extractall(tmp)
         shp = gpd.read_file(tmp + '/Green spaces London/Green_spaces_excluding_private.shp')
