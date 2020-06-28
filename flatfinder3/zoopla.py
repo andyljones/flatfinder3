@@ -43,28 +43,12 @@ def throttle():
     recent.append(time.time())
     cache.write_text(json.dumps(recent))
 
-def listing_dir(lid):
-    return (CACHE / 'listings' / lid[:3] / lid[:6])
-
-def add_listing(listing):
-    lid = listing['listing_id']
-    path = (listing_dir(lid) / lid).with_suffix('.json')    
-    if not path.parent.exists():
-        path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(listing))
-
-def __listing(p):
-    return json.loads(p.read_text())
-
-def _listing(d):
-    with aljpy.parallel(__listing, progress=False, processes=False, N=4) as pool:
-        return pool.wait([pool(p) for p in d.glob('**/*.json')])
-
 def listings():
-    with aljpy.parallel(_listing, progress=True) as pool:
-        data = pool.wait([pool(d) for d in (CACHE / 'listings').iterdir()])
-        data = [x for xs in data for x in xs]
-    return pd.io.json.json_normalize(data)
+    path = CACHE / 'listings.json'
+    if not path.exists():
+        return pd.DataFrame()
+    data = json.loads(path.read_text())
+    return pd.json_normalize(data.values())
 
 def grid_center(i):
     x1, x2, y1, y2 = LONDON
@@ -91,9 +75,16 @@ def search_page(grid_idx, page=0):
     r.raise_for_status()
     raw = json.loads(r.content)
 
+    path = CACHE / 'listings.json'
+    if not path.exists():
+        path.parent.mkdir(exist_ok=True)
+        path.write_text('{}')
+    cache = json.loads(path.read_text())
     for listing in raw['listing']:
         listing['grid_index'] = grid_idx
-        add_listing(listing)
+        cache[listing['listing_id']] = listing
+    path.with_suffix('.tmp').write_text(json.dumps(cache))
+    path.with_suffix('.tmp').rename(path)
 
     earliest = min(l['last_published_date'] for l in raw['listing'])
     done = raw['result_count'] <= page*PARAMS['page_size']
@@ -132,7 +123,7 @@ def search():
 
 def photo(lid, filename):
     url = f'https://lid.zoocdn.com/645/430/{filename}'
-    path = listing_dir(lid) / lid / filename
+    path = CACHE / 'photos' / lid / filename
     if not path.exists():
         if not path.parent.exists():
             path.parent.mkdir(exist_ok=True, parents=True)
