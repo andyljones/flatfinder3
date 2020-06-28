@@ -117,7 +117,7 @@ def threshold(mapdata, t):
     return {**mapdata, 'img': (mapdata['img'] < t).astype(float)}
 
 def aggtim(targets, method, interval=5):
-    layers = [webcat.timmap(target, interval=interval) for target in targets]
+    layers = [webcat.timmap(tuple(target), interval=interval) for target in targets]
     stack = reproject(*layers)
     return {**layers[0], 'img': getattr(stack, method)(0)}
     

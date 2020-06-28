@@ -5,7 +5,7 @@ import scipy.ndimage
 from cartopy.io.img_tiles import GoogleWTS, OSM
 import urllib.parse
 import aljpy
-from cartopy.crs import Mercator
+from cartopy import crs as ccrs
 import requests
 
 # ((bot, left), (top, right))
@@ -82,7 +82,7 @@ def basemap(zoom=12):
     return {'img': img, 'extent': extent, 'origin': origin}
 
 def run():
-    ax = plt.axes(projection=Mercator.GOOGLE)
+    ax = plt.axes(projection=ccrs.Mercator.GOOGLE)
     ax.set_extent(LONDON)
 
     base = basemap()

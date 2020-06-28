@@ -34,7 +34,7 @@ ADD .jupyter /root/.jupyter
 ADD .ipython /root/.ipython
 
 # Some stuff needs to come from conda because it's a pain to install from pip
-RUN conda install -y numpy cartopy -c default -c conda-forge && \
+RUN conda install -y numpy cartopy==0.18 -c default -c conda-forge && \
     conda clean -ya && \
     # Core tools
     pip install scipy pandas tqdm seaborn matplotlib \

@@ -50,6 +50,9 @@ to start a [Flask development server](https://flask.palletsprojects.com/en/1.1.x
 
 Like with the code above, loading the listings is always slow but for everything else there's a lot of caching that'll speed things up after the first time. 
 
-By default it'll only show listings within 10 mins of a park and 10 mins of a town center.
+By default it'll only show listings within 10 mins of a park and 10 mins of a town center. Look in `server.dataframe` if you want to change that.
 
 If you want to only show flats within a certain travel time of a point - or points - have a look at the `geo.aggtim` calls, which hook into TfL's travel time data. It's disabled by default because it depends on a list of locations that are specific to me (like, where my friends live, which I obviously don't want to put on GitHub), but looking at the `geo.LOCATIONS` conditionals will point you in the right direction about how to adapt it.
+
+## Analysis
+The `cuts()` and `decisions()` functions in `__init__.py` show you how to superimpose maps and plot points on top of maps.

@@ -53,10 +53,17 @@ def add_listing(listing):
         path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(listing))
 
+def __listing(p):
+    return json.loads(p.read_text())
+
+def _listing(d):
+    with aljpy.parallel(__listing, progress=False, processes=False, N=4) as pool:
+        return pool.wait([pool(p) for p in d.glob('**/*.json')])
+
 def listings():
-    data = []
-    for p in (CACHE / 'listings').glob('**/*.json'):
-        data.append(json.loads(p.read_text()))
+    with aljpy.parallel(_listing, progress=True) as pool:
+        data = pool.wait([pool(d) for d in (CACHE / 'listings').iterdir()])
+        data = [x for xs in data for x in xs]
     return pd.io.json.json_normalize(data)
 
 def grid_center(i):
