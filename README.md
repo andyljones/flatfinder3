@@ -58,6 +58,14 @@ By default it'll only show listings within 10 mins of a park and 10 mins of a to
 
 If you want to only show flats within a certain travel time of a point - or points - have a look at the `geo.aggtim` calls, which hook into TfL's travel time data. It's disabled by default because it depends on a list of locations that are specific to me (like, where my friends live, which I obviously don't want to put on GitHub), but looking at the `geo.LOCATIONS` conditionals will point you in the right direction about how to adapt it.
 
+## Running publicly
+To expose your Flask server to the world, use
+```
+docker run -td --name flatfinder3 -v $(pwd):/code -p 5001:5001 flatfinder3:latest
+docker exec -t -e FLASK_APP="flatfinder3/server.py" flatfinder3 flask run --host 0.0.0.0 --port 5001
+```
+Note the lack of `FLASK_ENV=development`! Running a dev server on a public interface is a bad idea.
+
 ## Analysis
 The `cuts()` and `decisions()` functions in `__init__.py` show you how to superimpose maps and plot points on top of maps.
 
