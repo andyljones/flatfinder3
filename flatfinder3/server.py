@@ -43,10 +43,10 @@ def dataframe():
     for k, m in map_layers().items():
         listings[k] = geo.lookup(listings, m)
 
-    df = listings.query('park < 10 & town < 10')
+    df = listings.query('park < 10 & town < 10').copy()
 
     if geo.LOCATIONS:
-        df = listings.query('friends < 45 & aerial < 45 & central < 60')
+        df = df.query('friends < 45 & aerial < 30 & central < 60').copy()
 
     df['nickname'] = df.listing_id.apply(aljpy.humanhash, n=2)
     df['published'] = pd.to_datetime(df.last_published_date).dt.strftime('%a %-I:%M%p')
