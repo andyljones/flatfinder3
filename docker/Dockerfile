@@ -39,7 +39,7 @@ RUN conda install -y numpy cartopy==0.18 -c default -c conda-forge && \
     # Core tools
     pip install scipy pandas tqdm seaborn matplotlib \
         # Web tools
-        requests beautifulsoup4 flask jinja2 \
+        requests beautifulsoup4 flask jinja2 html5lib \
         # Geo tools
         shapely rasterio mapbox_vector_tile geopandas\
         # Dev tools

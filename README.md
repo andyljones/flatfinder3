@@ -1,6 +1,10 @@
-This is a flat finding tool I put together in two days for my own purposes. Under the general principle of if-you-don't-have-a-good-reason-not-to-then-you-should-open-source-your-work, here's the source! I, uh, don't actually expect anyone to use this as-is - if it has any utility to anyone, it'll be as a stack of code to pull useful bits out of.
+This is a flat finding tool I put together in two days for my own purposes. It scrapes listings from Zoopla, combines them with travel time info from TfL, then presents it in an easy-to-inspect format. 
 
-If you _are_ interested in getting it working, know that it's designed to be used in tandem with vscode and Jupyter, since that's how I roll.
+<p align="center"><img src="screenshot.png"></p>
+
+It's here under the general principle of if-you-don't-have-a-good-reason-not-to-then-you-should-open-source-whatever-you-do. I, uh, don't actually expect anyone to use this as-is - if it has any utility to anyone, it'll be as a stack of code to pull useful bits out of.
+
+If you _are_ interested in getting it working, know that it's designed to be used in tandem with vscode and Jupyter, since that's how I roll. You're welcome to ask for help in the issue tracker, but bear in mind this is a side-project of mine and I won't be able to give more than some pointers.
 
 ## Setup
 
@@ -56,3 +60,4 @@ If you want to only show flats within a certain travel time of a point - or poin
 
 ## Analysis
 The `cuts()` and `decisions()` functions in `__init__.py` show you how to superimpose maps and plot points on top of maps.
+
