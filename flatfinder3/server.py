@@ -20,10 +20,14 @@ def map_layers():
     base = webcat.basemap()
     maps = aljpy.dotdict({
         'park': geo.green_spaces(base), 
-        'town': geo.town_centers(base), 
-        'aerial': geo.aggtim(geo.LOCATIONS['aerial'].values(), 'min'), 
-        'central': geo.aggtim(geo.LOCATIONS['central'].values(), 'mean', interval=10), 
-        'friends': geo.aggtim(geo.LOCATIONS['friends'].values(), 'mean', interval=10)})
+        'town': geo.town_centers(base)})
+
+    if geo.LOCATIONS:
+        maps.update({
+            'aerial': geo.aggtim(geo.LOCATIONS['aerial'].values(), 'min'), 
+            'central': geo.aggtim(geo.LOCATIONS['central'].values(), 'mean', interval=10), 
+            'friends': geo.aggtim(geo.LOCATIONS['friends'].values(), 'mean', interval=10)})
+
     return maps
 
 @aljpy.autocache(disk=False, memory=True)
@@ -39,7 +43,10 @@ def dataframe():
     for k, m in map_layers().items():
         listings[k] = geo.lookup(listings, m)
 
-    df = listings.query('friends < 45 & park < 10 & town < 10 & aerial < 45 & central < 60')
+    df = listings.query('park < 10 & town < 10')
+
+    if geo.LOCATIONS:
+        df = listings.query('friends < 45 & aerial < 45 & central < 60')
 
     df['nickname'] = df.listing_id.apply(aljpy.humanhash, n=2)
     df['published'] = pd.to_datetime(df.last_published_date).dt.strftime('%a %-I:%M%p')

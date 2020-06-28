@@ -5,8 +5,7 @@ from . import webcat, zoopla, geo, server
 import matplotlib.pyplot as plt
 import subprocess
 
-
-def details(df):
+def details_pages(df):
     for _, r in df.sort_values('rental_prices.per_month').head(1).iterrows():
         subprocess.check_call(['open', r.details_url])
     
