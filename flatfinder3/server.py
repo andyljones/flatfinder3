@@ -1,6 +1,6 @@
 from jinja2 import Template
 from flask import Flask, jsonify, make_response
-from . import zoopla, webcat, geo
+from . import zoopla, webcat, geo, prices
 from pkg_resources import resource_string
 import pandas as pd
 import aljpy
@@ -20,7 +20,8 @@ def map_layers():
     base = webcat.basemap()
     maps = aljpy.dotdict({
         'park': geo.green_spaces(base), 
-        'town': geo.town_centers(base)})
+        'town': geo.town_centers(base),
+        'propvalue': prices.layer(base)})
 
     if geo.LOCATIONS:
         maps.update({
@@ -43,7 +44,7 @@ def dataframe():
     for k, m in map_layers().items():
         listings[k] = geo.lookup(listings, m)
 
-    df = listings.query('park < 10 & town < 10').copy()
+    df = listings.query('park < 10 & town < 10 & propvalue < 10000').copy()
 
     if geo.LOCATIONS:
         df = df.query('friends < 45 & aerial < 30 & central < 60').copy()

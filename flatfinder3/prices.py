@@ -37,11 +37,12 @@ def shapes():
 def data():
     return shapes().merge(prices().groupby('PostDist').first(), left_index=True, right_index=True)
 
+@aljpy.autocache('')
 def layer(base):
     t, shape = geo.transform(base)
 
     # Guess at the CRS
-    d = data().set_crs({'init': 'epsg:4326'}).to_crs(ccrs.Mercator.GOOGLE.proj4_params)
+    d = data().set_crs('epsg:4326').to_crs(ccrs.Mercator.GOOGLE.proj4_params)
 
     # Flip it because rasterio expects a top origin
     img = rasterio.features.rasterize([(r.geometry, r.price_by_postcode_district_price_per_sq_m) for _, r in d.iterrows()], out_shape=shape, transform=t)[::-1]
@@ -50,3 +51,5 @@ def layer(base):
     while (img == 0).any():
         dilated = scipy.ndimage.grey_dilation(img, size=3)
         img[img == 0] = dilated[img == 0]
+    
+    return {**base, 'img': img}
