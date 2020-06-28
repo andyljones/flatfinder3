@@ -1,10 +1,10 @@
-This is a flat finding tool I put together in two days for my own purposes. It scrapes listings from Zoopla, combines them with travel time info from TfL, then presents it in an easy-to-inspect format. 
+This is a flat finding tool that scrapes listings from Zoopla, combines them with travel time info from TfL, then presents it in an easy-to-inspect format. 
 
 <p align="center"><img src="screenshot.png"></p>
 
-It's here under the general principle of if-you-don't-have-a-good-reason-not-to-then-you-should-open-source-whatever-you-do. I, uh, don't actually expect anyone to use this as-is - if it has any utility to anyone, it'll be as a stack of code to pull useful bits out of.
+I put this together in two days for my own purposes, so bear in mind it's only public under the general principle of if-you-don't-have-a-good-reason-not-to-then-you-should-open-source-whatever-you-do. I, uh, don't actually expect anyone to use this as-is - if it has any utility to anyone, it'll be as a stack of code to pull useful bits out of.
 
-If you _are_ interested in getting it working, know that it's designed to be used in tandem with vscode and Jupyter, since that's how I roll. You're welcome to ask for help in the issue tracker, but bear in mind this is a side-project of mine and I won't be able to give more than some pointers.
+If you _are_ interested in getting it working, know that it's designed to be used in tandem with vscode and Jupyter, since that's how I roll. You're welcome to ask for help in the issue tracker, but I won't be able to give more than pointers.
 
 ## Setup
 
@@ -46,7 +46,7 @@ ax.figure.set_size_inches(10, 10)
 Fetching the basemap might be slow the first time, then the caching layer will kick in. Loading the listings will be (after you've downloaded thousands of listigns) slow _every_ time since it's not cached, so try to only do that once per Jupyter session.
 
 ## Running the web server
-Use `ctrl+` in vscode to open a terminal, then run
+Use `ctrl+`` ` in vscode to open a terminal, then run
 ```
 FLASK_ENV=development FLASK_APP=flatfinder3/server.py flask run --port 5001
 ```
