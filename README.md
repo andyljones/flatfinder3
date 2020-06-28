@@ -61,3 +61,8 @@ If you want to only show flats within a certain travel time of a point - or poin
 ## Analysis
 The `cuts()` and `decisions()` functions in `__init__.py` show you how to superimpose maps and plot points on top of maps.
 
+## Credit
+ * [Zoopla](http://zoopla.co.uk/) for the listings
+ * [TfL](https://tfl.gov.uk/info-for/urban-planning-and-construction/planning-with-webcat/webcat) for the travel time tool
+ * [Nick Shaw](https://geospatialwandering.wordpress.com/2015/05/22/open-spaces-shapefile-for-london) for the green space data
+ * [data.london.gov](https://data.london.gov.uk/dataset/town-centre-locations) for town center locations
