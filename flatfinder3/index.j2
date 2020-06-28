@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>flathunter 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.css" integrity="sha256-oSsWW/ca1ll8OVu2t4EKkyb9lmH0Pkd8CXKXnYP4QvA=" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/protonet-jquery.inview/1.1.2/jquery.inview.min.js" integrity="sha256-UjHZBFGvaQdlRbBPyuksw33XSdLNmkKnDU4TfoWahB0=" crossorigin="anonymous"></script>
+
+    <style>
+    .listings {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .listing {
+      overflow-x: scroll;
+    }
+
+    .photos {
+      height: 430px;
+    }
+
+    .info {
+      width: 300px;
+    }
+
+    .info h3 {
+      text-align: center;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+    }
+
+    </style>
+
+    <script>
+      $(document).ready(ev => {
+        $('.listing').one('inview', function(event) {
+          const lid = $(this).attr('lid');
+          $(this).find('.photos').append(`<img src="/map/${$(this).attr('lat')}/${$(this).attr('lon')}">`);
+          $.get(`/photos/${lid}`, data => {
+            data.forEach(url => $(this).find('.photos').append(`<img src="/photo/${lid}/${url}">`));
+          });
+        })
+      })
+
+      function decide(e, d) {
+        const lid = $(e).closest('.listing').attr('lid');
+        $.get(`/decide/${lid}/${d}`);
+        $(e).parent().find('button').attr('disabled', true);
+      }
+    </script>
+
+  </head>
+  <body>
+    <div class="nav container">
+      <a href='/' class="navbar-item">Unscored</a>
+      <a href='/decision/bad' class="navbar-item">Bad</a>
+      <a href='/decision/meh' class="navbar-item">Meh</a>
+      <a href='/decision/good' class="navbar-item">Good</a>
+      <a href='/decision/great' class="navbar-item">Great</a>
+    </div>
+    <section class="section">
+      <div class="listings">
+      {% for _, r in df.items() %}
+        <div class="level listing box" lid="{{r['listing_id']}}" lat="{{r['latitude']}}" lon="{{r['longitude']}}">
+          <div class="level-left">
+            <div class="level-item info">
+              <div>
+                <h3 class='subtitle'><a href="{{r['details_url']|e}}">{{r['nickname']}}</a></h3>
+                <table class='table is-fullwidth'>
+                <tbody>
+                  <tr>
+                    <td>Rent</td>
+                    <td>£{{r['rental_prices.per_month']}}</td>
+                  </tr>
+                  <tr>
+                    <td>Updated</td>
+                    <td>{{r['published']}}</td>
+                  </tr>
+                  <tr>
+                    <td>Index</td>
+                    <td>{{loop.index}}/{{loop.length}}</td>
+                  </tr>
+                  <tr>
+                    <td>Central</td>
+                    <td>{{r['central'] | int}} mins</td>
+                  </tr>
+                  <tr>
+                    <td>Town</td>
+                    <td>{{r['town'] | int}} mins</td>
+                  </tr>
+                  <tr>
+                    <td>Park</td>
+                    <td>{{r['park'] | int}} mins</td>
+                  </tr>
+                  <tr>
+                    <td>Aerial</td>
+                    <td>{{r['aerial'] | int}} mins</td>
+                  </tr>
+                  <tr>
+                    <td>Friends</td>
+                    <td>{{r['friends'] | int}} mins</td>
+                  </tr>
+                </tbody>
+                </table>
+                  <div class="buttons is-centered has-addons">
+                    <button class="button is-danger" onclick='decide(this, "bad")'>Bad</button>
+                    <button class="button is-warning" onclick='decide(this, "meh")'>Meh</button>
+                    <button class="button is-info" onclick='decide(this, "good")'>Good</button>
+                    <button class="button is-success" onclick='decide(this, "great")'>Great</button>
+                  </div>
+              </div>
+            </div>
+            <div class="level-item photos">
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </section>
+  </body>
+</html>
