@@ -31,7 +31,7 @@ def map_layers():
 
     return maps
 
-@aljpy.autocache(disk=False, memory=True)
+@aljpy.autocache(disk=False, memory=True, duration=600)
 def dataframe():
     print('Generating dataframe')
 

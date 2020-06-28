@@ -121,6 +121,12 @@ def search():
                     print(f'Ran out of pages on index {i}')
                     break
 
+def loop():
+    while True:
+        search()
+        print('Sleeping for an hour before the next search')
+        time.sleep(3600)
+
 def photo(lid, filename):
     url = f'https://lid.zoocdn.com/645/430/{filename}'
     path = CACHE / 'photos' / lid / filename
