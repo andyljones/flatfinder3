@@ -105,7 +105,6 @@ def _map(lat, lon, width=10):
 
     bs = BytesIO()
     fig.savefig(bs, format='png')
-    
     return bs.getvalue()
 
 @app.route('/map/<lat>/<lon>')
@@ -133,3 +132,32 @@ def reset(lid):
     del ds[lid]
     DECISIONS.write_text(json.dumps(ds))
     return ''
+
+def _bigmap():
+    df = decision_dataframe()
+
+    base = webcat.basemap()
+
+    fig = mpl.figure.Figure(dpi=100, figsize=(6.4, 6.4))
+    ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.Mercator.GOOGLE, frameon=False)
+
+    sub = df[df.decision != '']
+    color = sub.decision.map({'bad': 'r', 'meh': 'y', 'good': 'b', 'great': 'g'})
+    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=200, c=color, alpha=.5)
+    xs, ys = ax.get_xlim(), ax.get_ylim()
+
+    rest = df[~df.index.isin(sub.index)]
+    ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=10, color='k', alpha=.5)
+
+    ax.imshow(**base, alpha=.25)
+    ax.set_xlim(xs), ax.set_ylim(ys)
+
+    return ax.figure
+    
+@app.route('/bigmap')
+def bigmap():
+    bs = BytesIO()
+    _bigmap().savefig(bs, format='png')
+    r = make_response(bs.getvalue())
+    r.headers.set('Content-Type', 'image/png')
+    return r

@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/protonet-jquery.inview/1.1.2/jquery.inview.min.js" integrity="sha256-UjHZBFGvaQdlRbBPyuksw33XSdLNmkKnDU4TfoWahB0=" crossorigin="anonymous"></script>
 
     <style>
+
     .listings {
       display: flex;
       flex-direction: column;
@@ -64,64 +65,65 @@
       <a href='/decision/good' class="navbar-item">Good</a>
       <a href='/decision/great' class="navbar-item">Great</a>
     </div>
-    <section class="section">
-      <div class="listings">
-      {% for _, r in df.items() %}
-        <div class="level listing box" lid="{{r['listing_id']}}" lat="{{r['latitude']}}" lon="{{r['longitude']}}">
-          <div class="level-left">
-            <div class="level-item info">
-              <div>
-                <h3 class='subtitle'><a href="{{r['details_url']|e}}">{{r['nickname']}}</a></h3>
-                <table class='table is-fullwidth'>
-                <tbody>
-                  <tr>
-                    <td>Rent</td>
-                    <td>£{{r['rental_prices.per_month']}}</td>
-                  </tr>
-                  <tr>
-                    <td>Updated</td>
-                    <td>{{r['published']}}</td>
-                  </tr>
-                  <tr>
-                    <td>Index</td>
-                    <td>{{loop.index}}/{{loop.length}}</td>
-                  </tr>
-                  <tr>
-                    <td>Central</td>
-                    <td>{{r['central'] | int}} mins</td>
-                  </tr>
-                  <tr>
-                    <td>Town</td>
-                    <td>{{r['town'] | int}} mins</td>
-                  </tr>
-                  <tr>
-                    <td>Park</td>
-                    <td>{{r['park'] | int}} mins</td>
-                  </tr>
-                  <tr>
-                    <td>Aerial</td>
-                    <td>{{r['aerial'] | int}} mins</td>
-                  </tr>
-                  <tr>
-                    <td>Friends</td>
-                    <td>{{r['friends'] | int}} mins</td>
-                  </tr>
-                </tbody>
-                </table>
-                  <div class="buttons is-centered has-addons">
-                    <button class="button is-danger" onclick='decide(this, "bad")'>Bad</button>
-                    <button class="button is-warning" onclick='decide(this, "meh")'>Meh</button>
-                    <button class="button is-info" onclick='decide(this, "good")'>Good</button>
-                    <button class="button is-success" onclick='decide(this, "great")'>Great</button>
-                  </div>
-              </div>
-            </div>
-            <div class="level-item photos">
+    <div class="container" style="display: flex; justify-content: center;">
+      <img src="/bigmap" class="bigmap box" style="padding: 3px; margin: 10px;">
+    </div>
+    <div class="listings">
+    {% for _, r in df.items() %}
+      <div class="level listing box" lid="{{r['listing_id']}}" lat="{{r['latitude']}}" lon="{{r['longitude']}}">
+        <div class="level-left">
+          <div class="level-item info">
+            <div>
+              <h3 class='subtitle'><a href="{{r['details_url']|e}}">{{r['nickname']}}</a></h3>
+              <table class='table is-fullwidth'>
+              <tbody>
+                <tr>
+                  <td>Rent</td>
+                  <td>£{{r['rental_prices.per_month']}}</td>
+                </tr>
+                <tr>
+                  <td>Updated</td>
+                  <td>{{r['published']}}</td>
+                </tr>
+                <tr>
+                  <td>Index</td>
+                  <td>{{loop.index}}/{{loop.length}}</td>
+                </tr>
+                <tr>
+                  <td>Central</td>
+                  <td>{{r['central'] | int}} mins</td>
+                </tr>
+                <tr>
+                  <td>Town</td>
+                  <td>{{r['town'] | int}} mins</td>
+                </tr>
+                <tr>
+                  <td>Park</td>
+                  <td>{{r['park'] | int}} mins</td>
+                </tr>
+                <tr>
+                  <td>Aerial</td>
+                  <td>{{r['aerial'] | int}} mins</td>
+                </tr>
+                <tr>
+                  <td>Friends</td>
+                  <td>{{r['friends'] | int}} mins</td>
+                </tr>
+              </tbody>
+              </table>
+                <div class="buttons is-centered has-addons">
+                  <button class="button is-danger" onclick='decide(this, "bad")'>Bad</button>
+                  <button class="button is-warning" onclick='decide(this, "meh")'>Meh</button>
+                  <button class="button is-info" onclick='decide(this, "good")'>Good</button>
+                  <button class="button is-success" onclick='decide(this, "great")'>Great</button>
+                </div>
             </div>
           </div>
+          <div class="level-item photos">
+          </div>
         </div>
-      {% endfor %}
       </div>
-    </section>
+    {% endfor %}
+    </div>
   </body>
 </html>
