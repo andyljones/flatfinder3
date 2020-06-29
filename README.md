@@ -45,6 +45,11 @@ ax.figure.set_size_inches(10, 10)
 ```
 Fetching the basemap might be slow the first time, then the caching layer will kick in. Loading the listings will be (after you've downloaded thousands of listigns) slow _every_ time since it's not cached, so try to only do that once per Jupyter session.
 
+You can run it continually with
+```
+docker exec -t flatfinder3 python -c "from flatfinder3 import *; zoopla.loop()"
+```
+
 ## Running the web server
 Use `ctrl+`` ` in vscode to open a terminal, then run
 ```
@@ -75,3 +80,4 @@ The `cuts()` and `decisions()` functions in `__init__.py` show you how to superi
  * [Nick Shaw](https://geospatialwandering.wordpress.com/2015/05/22/open-spaces-shapefile-for-london) for the green space data
  * [data.london.gov](https://data.london.gov.uk/dataset/town-centre-locations) for town center locations
  * [Area prices](https://houseprices.anna.ps/)
+ * My [last](https://github.com/andyljones/flat-scraper-2) [two](https://github.com/andyljones/flat-scraper) flat finders.

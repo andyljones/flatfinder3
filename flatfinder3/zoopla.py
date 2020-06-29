@@ -122,6 +122,7 @@ def search():
                     break
 
 def loop():
+    print('Started')
     while True:
         search()
         print('Sleeping for an hour before the next search')
