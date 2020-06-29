@@ -16,6 +16,15 @@ app = Flask(__name__)
 
 DECISIONS = Path('data/decisions.json')
 
+CUTS = {
+    'park': 10,
+    'town': 10,
+    'propvalue': 10000,
+    'friends': 45,
+    'aerial': 30,
+    'central': 60}
+
+@aljpy.autocache(disk=False, memory=True)
 def map_layers():
     base = webcat.basemap()
     maps = aljpy.dotdict({
@@ -44,10 +53,11 @@ def dataframe():
     for k, m in map_layers().items():
         listings[k] = geo.lookup(listings, m)
 
-    df = listings.query('park < 10 & town < 10 & propvalue < 10000').copy()
-
-    if geo.LOCATIONS:
-        df = df.query('friends < 45 & aerial < 30 & central < 60').copy()
+    df = listings
+    for k, c in CUTS.items():
+        if k in df:
+            df = df.loc[df[k] <= c]
+    df = df.copy()
 
     df['nickname'] = df.listing_id.apply(aljpy.humanhash, n=2)
     df['published'] = pd.to_datetime(df.last_published_date).dt.strftime('%a %-I:%M%p')
@@ -133,10 +143,18 @@ def reset(lid):
     DECISIONS.write_text(json.dumps(ds))
     return ''
 
+@aljpy.autocache('{cuts}')
+def _combomap(cuts):
+    base = webcat.basemap()
+    layers = map_layers()
+    common = set(cuts) & set(layers)
+    return geo.reproject(base, *[geo.threshold(layers[name], cuts[name]) for name in common]).all(0).astype(float)
+
 def _bigmap():
     df = decision_dataframe()
 
     base = webcat.basemap()
+    combo = _combomap(CUTS)
 
     fig = mpl.figure.Figure(dpi=100, figsize=(6.4, 6.4))
     ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.Mercator.GOOGLE, frameon=False)
@@ -149,7 +167,8 @@ def _bigmap():
     rest = df[~df.index.isin(sub.index)]
     ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=10, color='k', alpha=.5)
 
-    ax.imshow(**base, alpha=.25)
+    ax.imshow(**base, alpha=.5)
+    ax.imshow(**{**base, 'img': combo}, cmap='Greys_r', alpha=.5)
     ax.set_xlim(xs), ax.set_ylim(ys)
 
     return ax.figure

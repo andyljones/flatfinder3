@@ -12,15 +12,23 @@ def details_pages(df):
 def cuts():
     layers = server.map_layers()
 
-    fig, axes = plt.subplots(5, 1, subplot_kw={'projection': ccrs.Mercator.GOOGLE})
     base = webcat.basemap()
-    cuts = {'park': 10, 'town': 10, 'aerial': 30, 'central': 60, 'friends': 45}
-    for ax, name in zip(axes.flatten(), layers):
+    cuts = server.CUTS
+    fig, axes = plt.subplots(len(cuts)+1, 1, subplot_kw={'projection': ccrs.Mercator.GOOGLE})
+    for ax, name in zip(axes.flatten(), cuts):
         ax.imshow(**base)
         ax.imshow(**geo.threshold(layers[name], cuts[name]), alpha=.5, cmap='Greys_r')
         ax.set_title(name)
         ax.set_extent((-.25, +0.1, 51.4, 51.6))
-    fig.set_size_inches(10, 40)
+    
+    combo = server._combomap(cuts)
+    ax = axes[-1]
+    ax.imshow(**base)
+    ax.imshow(**{**base, 'img': combo}, alpha=.5, cmap='Greys_r')
+    ax.set_title('combo')
+    ax.set_extent((-.25, +0.1, 51.4, 51.6))
+
+    fig.set_size_inches(10, (len(cuts)+1)*10)
 
 def decisions():
     df = server.decision_dataframe()
