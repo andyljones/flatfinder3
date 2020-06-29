@@ -150,8 +150,8 @@ def _combomap(cuts):
     common = set(cuts) & set(layers)
     return geo.reproject(base, *[geo.threshold(layers[name], cuts[name]) for name in common]).all(0).astype(float)
 
-def _bigmap():
-    df = decision_dataframe()
+def _bigmap(df=None):
+    df = decision_dataframe() if df is None else df
 
     base = webcat.basemap()
     combo = _combomap(CUTS)
@@ -159,13 +159,14 @@ def _bigmap():
     fig = mpl.figure.Figure(dpi=100, figsize=(6.4, 6.4))
     ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.Mercator.GOOGLE, frameon=False)
 
-    sub = df[df.decision != '']
-    color = sub.decision.map({'bad': 'r', 'meh': 'y', 'good': 'b', 'great': 'g'})
-    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=50, c=color, alpha=.5)
+    sub = df[df.decision != ''].copy()
+    sub['color'] = sub.decision.map({'bad': -2, 'meh': -1, 'good': +1, 'great': +2})
+    sub = sub.sort_values('color')
+    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=100, c=sub.color, cmap='RdYlGn')
     xs, ys = ax.get_xlim(), ax.get_ylim()
 
     rest = df[~df.index.isin(sub.index)]
-    ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=10, color='k', alpha=.5)
+    ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=10, color='k')
 
     ax.imshow(**base, alpha=.5)
     ax.imshow(**{**base, 'img': combo}, cmap='Greys_r', alpha=.5)
