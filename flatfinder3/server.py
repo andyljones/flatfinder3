@@ -143,7 +143,7 @@ def _bigmap():
 
     sub = df[df.decision != '']
     color = sub.decision.map({'bad': 'r', 'meh': 'y', 'good': 'b', 'great': 'g'})
-    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=200, c=color, alpha=.5)
+    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=50, c=color, alpha=.5)
     xs, ys = ax.get_xlim(), ax.get_ylim()
 
     rest = df[~df.index.isin(sub.index)]

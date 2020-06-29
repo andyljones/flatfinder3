@@ -90,10 +90,6 @@
                   <td>{{loop.index}}/{{loop.length}}</td>
                 </tr>
                 <tr>
-                  <td>Central</td>
-                  <td>{{r['central'] | int}} mins</td>
-                </tr>
-                <tr>
                   <td>Town</td>
                   <td>{{r['town'] | int}} mins</td>
                 </tr>
@@ -102,13 +98,19 @@
                   <td>{{r['park'] | int}} mins</td>
                 </tr>
                 <tr>
-                  <td>Aerial</td>
-                  <td>{{r['aerial'] | int}} mins</td>
+                  <td>Central</td>
+                  <td>{{r['central'] | int}} mins</td>
                 </tr>
-                <tr>
-                  <td>Friends</td>
-                  <td>{{r['friends'] | int}} mins</td>
-                </tr>
+                {% if 'aerial' in r %}
+                  <tr>
+                    <td>Aerial</td>
+                    <td>{{r['aerial'] | int}} mins</td>
+                  </tr>
+                  <tr>
+                    <td>Friends</td>
+                    <td>{{r['friends'] | int}} mins</td>
+                  </tr>
+                {% endif %}
               </tbody>
               </table>
                 <div class="buttons is-centered has-addons">
