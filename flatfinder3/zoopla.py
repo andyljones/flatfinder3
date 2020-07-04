@@ -104,6 +104,7 @@ def search():
             try:
                 earliest, done = search_page(i, page)
             except:
+                raise
                 print(f'Failed while fetching page {page} of index {i}')
                 time.sleep(API_WINDOW/(API_LIMIT - 10))
             else:
@@ -125,8 +126,8 @@ def loop():
     print('Started')
     while True:
         search()
-        print('Sleeping for an hour before the next search')
-        time.sleep(3600)
+        print('Sleeping for six hours before the next search')
+        time.sleep(6*3600)
 
 def photo(lid, filename):
     url = f'https://lid.zoocdn.com/645/430/{filename}'

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>flathunter 3</title>
+    <title>flathunter {{decision}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.css" integrity="sha256-oSsWW/ca1ll8OVu2t4EKkyb9lmH0Pkd8CXKXnYP4QvA=" crossorigin="anonymous">
 
@@ -66,7 +66,7 @@
       <a href='/decision/great' class="navbar-item">Great</a>
     </div>
     <div class="container" style="display: flex; justify-content: center;">
-      <img src="/bigmap" class="bigmap box" style="padding: 3px; margin: 10px;" height="640px" width="640px">
+      <img src="/bigmap/{{decision}}" class="bigmap box" style="padding: 3px; margin: 10px;" height="640px" width="640px">
     </div>
     <div class="listings">
     {% for _, r in df.items() %}

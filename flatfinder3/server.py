@@ -74,11 +74,11 @@ def render(decision, buttons):
     df = decision_dataframe()
     df = df[df.decision == decision]
     template = Template(resource_string(__package__, 'index.j2').decode())
-    return template.render(df=df.to_dict(orient='index'), buttons=buttons)
+    return template.render(df=df.to_dict(orient='index'), buttons=buttons, decision=decision)
     
 @app.route('/')
 def index():
-    return render(decision='', buttons=True)
+    return render(decision='all', buttons=True)
 
 @app.route('/decision/<decision>')
 def saved(decision):
@@ -150,7 +150,7 @@ def _combomap(cuts):
     common = set(cuts) & set(layers)
     return geo.reproject(base, *[geo.threshold(layers[name], cuts[name]) for name in common]).all(0).astype(float)
 
-def _bigmap(df=None):
+def _bigmap(decision='all', df=None):
     df = decision_dataframe() if df is None else df
 
     base = webcat.basemap()
@@ -159,14 +159,18 @@ def _bigmap(df=None):
     fig = mpl.figure.Figure(dpi=100, figsize=(6.4, 6.4))
     ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.Mercator.GOOGLE, frameon=False)
 
-    sub = df[df.decision != ''].copy()
+    if decision == 'all':
+        sub = df[df.decision != ''].copy()
+    else:
+        sub = df[df.decision == decision]
+
     sub['color'] = sub.decision.map({'bad': -2, 'meh': -1, 'good': +1, 'great': +2})
     sub = sub.sort_values('color')
-    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=100, c=sub.color, cmap='RdYlGn')
-    xs, ys = ax.get_xlim(), ax.get_ylim()
+    ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=100, c=sub.color, vmin=-2, vmax=+2, cmap='RdYlGn')
 
     rest = df[~df.index.isin(sub.index)]
-    ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=10, color='k')
+    ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=5, color='k', alpha=.5)
+    xs, ys = ax.get_xlim(), ax.get_ylim()
 
     ax.imshow(**base, alpha=.5)
     ax.imshow(**{**base, 'img': combo}, cmap='Greys_r', alpha=.5)
@@ -174,10 +178,10 @@ def _bigmap(df=None):
 
     return ax.figure
     
-@app.route('/bigmap')
-def bigmap():
+@app.route('/bigmap/<decision>')
+def bigmap(decision):
     bs = BytesIO()
-    _bigmap().savefig(bs, format='png')
+    _bigmap(decision).savefig(bs, format='png')
     r = make_response(bs.getvalue())
     r.headers.set('Content-Type', 'image/png')
     return r
