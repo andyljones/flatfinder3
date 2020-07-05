@@ -87,9 +87,12 @@ def search_page(grid_idx, page=0):
     path.with_suffix('.tmp').write_text(json.dumps(cache))
     path.with_suffix('.tmp').rename(path)
 
-    earliest = min(l['last_published_date'] for l in raw['listing'])
+    earliest = pd.Timestamp(min(l['last_published_date'] for l in raw['listing']))
+    latest = pd.Timestamp(max(l['last_published_date'] for l in raw['listing']))
+    print(f'{grid_idx}/{page}: covered {earliest} to {latest}')
+
     done = raw['result_count'] <= page*PARAMS['page_size']
-    return pd.Timestamp(earliest), done
+    return earliest, done
 
 def cache_dataframe():
     ls = listings()
@@ -119,30 +122,25 @@ def search():
                 earliest, done = search_page(i, page)
             except:
                 raise
-                print(f'Failed while fetching page {page} of index {i}')
-                time.sleep(API_WINDOW/(API_LIMIT - 10))
             else:
-                print(f'Fetched page {page} of index {i}, back until {earliest}')
-                time.sleep(API_WINDOW/(API_LIMIT - 10))
+                time.sleep(1)
                 if done:
-                    print(f'Fetched all listings of index {i}')
+                    print(f'{i}: fetched all listings')
                     break
                 if pd.Timestamp(earliest) < latest:
-                    print(f'Fetched all recent listings of index {i}')
+                    print(f'{i}: fetched all recent listings')
                     break
 
                 page = page + 1
                 if page == 100:
-                    print(f'Ran out of pages on index {i}')
+                    print(f'{i}: ran out of pages')
                     break
             
 def loop():
-    print('Caching dataframe')
-    cache_dataframe()
-
     print('Started')
     while True:
         search()
+
         print('Caching dataframe')
         cache_dataframe()
 
