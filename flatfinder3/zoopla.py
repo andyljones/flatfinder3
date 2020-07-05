@@ -136,13 +136,16 @@ def search():
                     print(f'Ran out of pages on index {i}')
                     break
             
-            print('Caching dataframe')
-            cache_dataframe()
-
 def loop():
+    print('Caching dataframe')
+    cache_dataframe()
+
     print('Started')
     while True:
         search()
+        print('Caching dataframe')
+        cache_dataframe()
+
         print('Sleeping for six hours before the next search')
         time.sleep(6*3600)
 
