@@ -72,7 +72,7 @@ def decision_dataframe():
 
 def render(decision, buttons):
     df = decision_dataframe()
-    df = (df == '') if decision == 'all' else df[df.decision == decision]
+    df = df[df.decision == ''] if decision == 'all' else df[df.decision == decision]
     template = Template(resource_string(__package__, 'index.j2').decode())
     return template.render(df=df.to_dict(orient='index'), buttons=buttons, decision=decision)
     
