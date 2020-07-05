@@ -5,6 +5,7 @@ import json
 import requests
 from pathlib import Path
 from .webcat import LONDON
+from . import dataframe
 import numpy as np
 from bs4 import BeautifulSoup
 import aljpy
@@ -90,6 +91,19 @@ def search_page(grid_idx, page=0):
     done = raw['result_count'] <= page*PARAMS['page_size']
     return pd.Timestamp(earliest), done
 
+def cache_dataframe():
+    ls = listings()
+    df = dataframe.dataframe(ls)
+    cache = CACHE / 'dataframe.pkl'
+    if not cache.parent.exists():
+        cache.parent.mkdir(exist_ok=True, parents=True)
+    pd.to_pickle(df, cache)
+
+@aljpy.autocache(disk=False, memory=True, duration=600)
+def load_dataframe():
+    cache = CACHE / 'dataframe.pkl'
+    return pd.read_pickle(cache)
+
 def search():
     for i in range(GRID_RES**2):
         page = 1
@@ -121,6 +135,9 @@ def search():
                 if page == 100:
                     print(f'Ran out of pages on index {i}')
                     break
+            
+            print('Caching dataframe')
+            cache_dataframe()
 
 def loop():
     print('Started')
