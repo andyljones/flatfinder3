@@ -64,6 +64,8 @@
       <a href='/decision/meh' class="navbar-item">Meh</a>
       <a href='/decision/good' class="navbar-item">Good</a>
       <a href='/decision/great' class="navbar-item">Great</a>
+      <a href='/decision/dead' class="navbar-item">Dead</a>
+      <a href='/decision/booked' class="navbar-item">Booked</a>
     </div>
     <div class="container" style="display: flex; justify-content: center;">
       <img src="/bigmap/{{decision}}" class="bigmap box" style="padding: 3px; margin: 10px;" height="640px" width="640px">
@@ -118,6 +120,10 @@
                   <button class="button is-warning" onclick='decide(this, "meh")'>Meh</button>
                   <button class="button is-info" onclick='decide(this, "good")'>Good</button>
                   <button class="button is-success" onclick='decide(this, "great")'>Great</button>
+                </div>
+                <div class="buttons is-centered has-addons are-small">
+                  <button class="button is-danger" onclick='decide(this, "dead")'>Dead</button>
+                  <button class="button is-success" onclick='decide(this, "booked")'>Booked</button>
                 </div>
             </div>
           </div>

@@ -138,14 +138,17 @@ def search():
             
 def loop():
     print('Started')
+    nxt = time.time()
     while True:
-        search()
+        if time.time() > nxt:
+            search()
 
-        print('Caching dataframe')
-        cache_dataframe()
+            print('Caching dataframe')
+            cache_dataframe()
 
-        print('Sleeping for six hours before the next search')
-        time.sleep(6*3600)
+            print('Sleeping for six hours before the next search')
+            nxt = time.time() + 6*3600
+        time.sleep(15)
 
 def photo(lid, filename):
     url = f'https://lid.zoocdn.com/645/430/{filename}'
