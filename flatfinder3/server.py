@@ -115,7 +115,7 @@ def _bigmap(decision='all', df=None):
     else:
         sub = df[df.decision == decision]
 
-    sub['color'] = sub.decision.map({'bad': -2, 'meh': -1, 'good': +1, 'great': +2})
+    sub['color'] = sub.decision.map({'bad': -2, 'meh': -1, 'good': +1, 'great': +2, 'booked': +2, 'dead': +2})
     sub = sub.sort_values('color')
     ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=100, c=sub.color, vmin=-2, vmax=+2, cmap='RdYlGn')
 

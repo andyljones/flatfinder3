@@ -30,6 +30,9 @@ def map_layers():
     return maps
 
 def dataframe(listings):
+    # Why is the API returning strings sometime?
+    listings['rental_prices.per_month'] = pd.to_numeric(listings['rental_prices.per_month'])
+
     listings = (listings
             .loc[lambda df: df['num_bedrooms'] == 1]
             .loc[lambda df: df['num_bathrooms'] == 1]
