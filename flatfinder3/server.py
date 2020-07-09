@@ -111,7 +111,7 @@ def _bigmap(decision='all', df=None):
     ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.Mercator.GOOGLE, frameon=False)
 
     if decision == 'all':
-        sub = df[df.decision != ''].copy()
+        sub = df[~df.decision.isin(['dead', ''])].copy()
     else:
         sub = df[df.decision == decision]
 
@@ -119,7 +119,7 @@ def _bigmap(decision='all', df=None):
     sub = sub.sort_values('color')
     ax.scatter(sub.longitude, sub.latitude, transform=ccrs.PlateCarree(), marker='.', s=100, c=sub.color, vmin=-2, vmax=+2, cmap='RdYlGn')
 
-    rest = df[~df.index.isin(sub.index)]
+    rest = df[~df.index.isin(sub.index) & df.decision != 'dead']
     ax.scatter(rest.longitude, rest.latitude, transform=ccrs.PlateCarree(), marker='.', s=5, color='k', alpha=.5)
     xs, ys = ax.get_xlim(), ax.get_ylim()
 

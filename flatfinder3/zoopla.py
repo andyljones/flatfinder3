@@ -121,7 +121,7 @@ def search():
             try:
                 earliest, done = search_page(i, page)
             except:
-                raise
+                print(f'{i}: failed, retrying')
             else:
                 time.sleep(1)
                 if done:

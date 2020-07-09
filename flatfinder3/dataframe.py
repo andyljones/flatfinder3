@@ -34,11 +34,13 @@ def dataframe(listings):
     listings['rental_prices.per_month'] = pd.to_numeric(listings['rental_prices.per_month'])
 
     listings = (listings
-            .loc[lambda df: df['num_bedrooms'] == 1]
-            .loc[lambda df: df['num_bathrooms'] == 1]
-            .loc[lambda df: df['rental_prices.per_month'] <= 1500]
+            .loc[lambda df: pd.to_numeric(df['num_bedrooms']) <= 2]
+            .loc[lambda df: pd.to_numeric(df['num_bedrooms']) > 0]
+            .loc[lambda df: pd.to_numeric(df['num_bathrooms']) >= 1]
+            .loc[lambda df: pd.to_numeric(df['rental_prices.per_month']) <= 1500]
             .loc[lambda df: df['rental_prices.shared_occupancy'] == 'N']
-            .loc[lambda df: df['furnished_state'] == 'furnished']).copy()
+            .loc[lambda df: df['furnished_state'] == 'furnished']
+            .loc[lambda df: pd.to_datetime(df['last_published_date']) > pd.Timestamp('2020-07-01')]).copy()
     for k, m in map_layers().items():
         listings[k] = geo.lookup(listings, m)
 
